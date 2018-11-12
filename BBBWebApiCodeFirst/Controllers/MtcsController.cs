@@ -109,6 +109,23 @@ namespace BBBWebApiCodeFirst.Controllers
             return null;
         }
 
+        private static Mtc ReadMtc(IDataRecord reader)
+        {
+            int gid = reader.GetInt32(0);
+            long id = reader.GetInt64(1);
+            long groesse = reader.GetInt64(2);
+            decimal area = reader.GetDecimal(4);
+
+            Mtc mtc = new Mtc
+            {
+                Gid = gid,
+                Id = id,
+                Groesse = groesse,
+                Area = area
+            };
+            return mtc;
+        }
+
         //[HttpGet("gettop")]
         //public IEnumerable<Mtc> GetTop()
         //{
@@ -136,22 +153,7 @@ namespace BBBWebApiCodeFirst.Controllers
         //    return null;
         //}
 
-        private static Mtc ReadMtc(IDataRecord reader)
-        {
-            int gid = reader.GetInt32(0);
-            long id = reader.GetInt64(1);
-            long groesse = reader.GetInt64(2);
-            decimal area = reader.GetDecimal(4);
 
-            Mtc mtc = new Mtc
-            {
-                Gid = gid,
-                Id = id,
-                Groesse = groesse,
-                Area = area
-            };
-            return mtc;
-        }
 
 
 
