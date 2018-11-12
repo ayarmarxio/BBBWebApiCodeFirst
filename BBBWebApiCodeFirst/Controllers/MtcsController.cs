@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BBBWebApiCodeFirst.Models;
 using NetTopologySuite.Geometries;
 using Npgsql;
+using System.Data;
 
 namespace BBBWebApiCodeFirst.Controllers
 {
@@ -15,12 +16,22 @@ namespace BBBWebApiCodeFirst.Controllers
     [ApiController]
     public class MtcsController : ControllerBase
     {
+
         private readonly DataContext _context;
+        private static string connectionString = "User ID = mario; Password = abcd; Server = localhost; Port = 5432; Database = BlockDb; Integrated Security = true; Pooling = true;";
+       
+             
+
 
         public MtcsController(DataContext context)
         {
             _context = context;
         }
+
+
+        
+
+
 
         // GET: api/Mtcs
         [HttpGet]
@@ -70,24 +81,149 @@ namespace BBBWebApiCodeFirst.Controllers
             return Ok(mtcArea);
         }
 
+        //GET:api/Mtcs/getallrows
+        [HttpGet("getallrows")]
+        public IEnumerable<Mtc> GetAllRows()
+        {
+            string _selectString = "SELECT * from \"Mtcs\" limit 3";
+
+            using (var conn = new NpgsqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (var cmd = new NpgsqlCommand(_selectString, conn))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        List<Mtc> MtcList = new List<Mtc>();
+
+                        while (reader.Read())
+                        {
+                            Mtc mtc = ReadMtc(reader);
+                            MtcList.Add(mtc);                            
+                        }
+                        return MtcList;
+                    }
+                }
+            }
+            return null;
+        }
+
+        //[HttpGet("gettop")]
+        //public IEnumerable<Mtc> GetTop()
+        //{
+        //    string _selectString = "SELECT b.gid, b.id, a.zoneact, sum(a.countact) as people from \"Mtcs\" a inner join \"MtcActivitys\" on a.zoneact = b.gid group by b.gid, b.id, a.zoneact order by people desc limit 5";
+
+        //    using (var conn = new NpgsqlConnection(connectionString))
+        //    {
+        //        conn.Open();
+
+        //        using (var cmd = new NpgsqlCommand(_selectString, conn))
+        //        {
+        //            using (var reader = cmd.ExecuteReader())
+        //            {
+        //                List<Mtc> MtcList = new List<Mtc>();
+
+        //                while (reader.Read())
+        //                {
+        //                    Mtc mtc = ReadMtc(reader);
+        //                    MtcList.Add(mtc);
+        //                }
+        //                return MtcList;
+        //            }
+        //        }
+        //    }
+        //    return null;
+        //}
+
+        private static Mtc ReadMtc(IDataRecord reader)
+        {
+            int gid = reader.GetInt32(0);
+            long id = reader.GetInt64(1);
+            long groesse = reader.GetInt64(2);
+            decimal area = reader.GetDecimal(4);
+
+            Mtc mtc = new Mtc
+            {
+                Gid = gid,
+                Id = id,
+                Groesse = groesse,
+                Area = area
+            };
+            return mtc;
+        }
+
+
+
+        // GET:api/Mtcs/getfullmtcs
+        //[HttpGet("getfullmtcs")]
+        //public IEnumerable<Mtc> GetFullMtcs()
+        //{
+        //    NpgsqlConnection conn = new NpgsqlConnection(connectionString);
+        //    conn.Open();
+
+        //    string _selectString = "SELECT * from 'Mtcs'";
+
+        //    NpgsqlCommand cmd = new NpgsqlCommand(_selectString);
+        //    cmd.AllResultTypesAreUnknown = true;
+
+        //    NpgsqlDataAdapter _dataAdapter = new NpgsqlDataAdapter(_selectString, conn);
+        //    conn.Close();
+
+        //    NpgsqlDataReader dataReader = cmd.ExecuteReader();
+
+        //    return null;           
+
+        //}
+
+        // GET: api/Mtcs/getMtcs
+        //[HttpGet("getallmtcs")]
+        //public IEnumerable<Mtc> GetAllMtcs()
+        //{
+        //    NpgsqlConnection conn = new NpgsqlConnection(connectionString);
+        //    string _selectString = "SELECT * from 'Mtcs'";
+
+        //    using (NpgsqlConnection _npgsqlConnection = new NpgsqlConnection(connectionString))
+        //    {
+        //        _npgsqlConnection.Open();
+        //        using (NpgsqlCommand selectcommand = new NpgsqlCommand(_selectString, conn))
+        //        {
+        //            using (NpgsqlDataReader dataReader = selectcommand.ExecuteReader())
+        //            {                     
+
+        //                while (dataReader.Read())
+        //                {
+        //                    return null;
+        //                }
+        //            }
+        //        }
+
+        //    }
+        //    return null;
+        //}
+
+
 
         // GET: api/Mtcs/gettophour
         //[HttpGet("gettophour")]
-        //public async Task<IActionResult> GetTopHour()
+        //public static void GetTopHour()
         //{
-        //    if (!ModelState.IsValid)
+        //    try
         //    {
-        //        return BadRequest(ModelState);
+        //        NpgsqlConnection conn = new NpgsqlConnection(connectionString);
+        //        conn.Open();
+
+        //        NpgsqlCommand command = new NpgsqlCommand("SELECT * from 'Mtcs'", conn);
+        //        NpgsqlDataReader dataReader = command.ExecuteReader();
+        //        var result = dataReader.Read();
+
+
+        //    }
+        //    catch (Exception msg)
+        //    {
+        //        Console.WriteLine(msg.ToString());
         //    }
 
-            //var tophour =  _context.Mtcs.
-            
-            //if (tophour == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //return Ok(tophour);
         //}
 
 
