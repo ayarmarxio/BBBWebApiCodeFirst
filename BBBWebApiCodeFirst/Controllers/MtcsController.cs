@@ -57,8 +57,6 @@ namespace BBBWebApiCodeFirst.Controllers
                 return BadRequest(ModelState);
             }
 
-            // var mtc = await _context.Mtcs.FindAsync(id);
-
             var mtc = await _context.Mtcs.FindAsync(id);
             var mtcArea = mtc.Area;
 
