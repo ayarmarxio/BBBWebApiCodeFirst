@@ -16,21 +16,13 @@ namespace BBBWebApiCodeFirst.Controllers
     [ApiController]
     public class MtcsController : ControllerBase
     {
-
         private readonly DataContext _context;
         private static string connectionString = "User ID = mario; Password = abcd; Server = localhost; Port = 5432; Database = BlockDb; Integrated Security = true; Pooling = true;";
-       
-             
-
-
+         
         public MtcsController(DataContext context)
         {
             _context = context;
         }
-
-
-        
-
 
 
         // GET: api/Mtcs
