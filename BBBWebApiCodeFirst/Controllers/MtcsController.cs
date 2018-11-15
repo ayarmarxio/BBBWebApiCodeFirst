@@ -67,28 +67,8 @@ namespace BBBWebApiCodeFirst.Controllers
 
             return Ok(mtcArea);
         }
-
-
-        // GET: api/Mtcs/gettophour
-        //[HttpGet("gettophour")]
-        //public async Task<IActionResult> GetTopHour()
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-            //var tophour =  _context.Mtcs.
-            
-            //if (tophour == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //return Ok(tophour);
-        //}
-
-
+        
+        
         // PUT: api/Mtcs/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMtc([FromRoute] int id, [FromBody] Mtc mtc)
